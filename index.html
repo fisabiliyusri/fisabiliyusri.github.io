@@ -1,130 +1,94 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>ipapi – ipapi.co - IP Location for the pro !</title>
+<html ng-app="ipLocation">
 
-        <meta charset="utf-8" />
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    
-    <meta name="description" content="ipapi.co - IP Location for the pro !">
-    <meta property="og:description" content="ipapi.co - IP Location for the pro !" />
-    
-    <meta name="author" content="ipapi" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico">
+  <link rel="icon" type="image/png" href="/static/images/favicon.png">
 
-    
+	<title>IP Location - Angular</title>
 
-    <!--[if lt IE 9]>
-      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.3/animate.min.css">
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+	<link rel="stylesheet" href="index.css">
+	
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.js">
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-route.js">
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.js">
+	</script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
-    <link rel="stylesheet" type="text/css" href="/style.css" />
-    <link rel="alternate" type="application/rss+xml" title="ipapi - ipapi.co - IP Location for the pro !" href="/feed.xml" />
+</head>
 
-  </head>
 
-  <body>
-    <div class="wrapper-masthead">
-      <div class="container">
-        <header class="masthead clearfix">
-          <a href="https://ipapi.co/" class="site-avatar"><img src="https://ipapi.co/static/images/icon/icon-48.png" /></a>
+<body>
+	<div class="container-fluid jumbotron">
+		<a href="https://ipapi.co/"><h1>Find IP Address Location</h1></a>
+    <h3>REST API + Angular</h3>
+	</div>
 
-          <div class="site-info">
-            <h1 class="site-name"><a href="https://ipapi.co/">ipapi</a></h1>
-            <p class="site-description">ipapi.co - IP Location for the pro !</p>
-          </div>
+	<div class="container" ng-controller="ipapiCtrl" ng-cloak>
+		<input id="search" ng-model="search" placeholder="Search an IP Address" />
+    <button ng-click="getJSON()" ng-init="getJSON()">Go</button>
 
-          <nav>
-            <a href="/">Blog</a>
-            <a href="https://ipapi.co/contact/">Contact</a>
-          </nav>
-        </header>
-      </div>
+    <div class="row">
+        <div class="col-md-6 animated zoomInRight"> 
+            <h3 class="vals" id="city">{{city}}</h3>
+            <h3 class="vals" id="region">{{region}}, {{country}}</h3>
+            <h4 class="vals2">{{eu}}</h4>
+            <h4 class="vals2">Country calling Code : {{calling_code}}</h4>
+            <h4 class="vals2">Currency : {{currency}}</h4>
+            <hr>
+        </div>
     </div>
 
-    <div id="main" role="main" class="container">
-      <div class="posts">
-  
-    
-        <article class="post">
 
-          <h1><a href="/ip_location_go/">IP Location in Go</a></h1>
+  <h4>
+    Angular Code Snippet : 
+	</h4>
 
-          <div class="entry">
-            <p>Find the location of an IP address in Go programming language (golang) !</p>
+    <div class="row">
+        <div class="col-md-12"> 
+            <pre class="vals" id="angular">
+              <code id="js-snippet" class="javascript">
+                var app = angular.module('ipLocation', [])
+                  .controller('ipapiCtrl', function($scope, $http){
+                    $scope.getJSON = function() {
+                      var search = $("#search").val();
+                      $http.get('https://ipapi.co/'+ search + '/json/')
+                        .then(function(response){ 
+                          $scope.city = response.data.city; 
+                          $scope.region = response.data.region;
+                          $scope.country = response.data.country_name
+                          if (response.data.in_eu){
+                            $scope.eu = 'In Europe';
+                          } else {
+                            $scope.eu = 'Not in Europe';
+                          }
+                          $scope.calling_code = response.data.country_calling_code;
+                          $scope.currency = response.data.currency;
+                        });
+                    }
+                })              </code>               
+            </pre>
+        </div>
+    </div>
 
+    <div class="row text-center">
+        <div class="col-md-12"> 
+            <h3><a target="_blank" href="https://ipapi.co/">ipapi - IP Lookup | IP Location</a></h3>
+        </div> 
+    </div> 
 
-          </div>
-
-          <a href="/ip_location_go/" class="read-more">Read More</a>
-        </article>
-    
-  
-    
-        <article class="post">
-
-          <h1><a href="/ip_lookup_php/">IP Lookup in PHP</a></h1>
-
-          <div class="entry">
-            <p>A collection of PHP code snippets to get real time information (like location, currency, timezone etc.) for an IP address.
-<br /><br /></p>
-<h4 id="-find-location-of-ip-address-in-php">§ <a href="#-find-location-of-ip-address-in-php">Find location of IP address in PHP</a></h4>
-<p><span class="code-description">
-    Get the geolocation (geographic location) of an IP address with an API. The example below uses <code class="highlighter-rouge">json</code> as the output format. To switch to a different format, replace <code class="highlighter-rouge">json</code> in the URL path below with other supported formats like <code class="highlighter-rouge">csv</code>, <code class="highlighter-rouge">xml</code>, <code class="highlighter-rouge">yaml</code> &amp; <code class="highlighter-rouge">jsonp</code>.
-</span></p>
-
-
-          </div>
-
-          <a href="/ip_lookup_php/" class="read-more">Read More</a>
-        </article>
-    
-  
-    
-        <article class="post">
-
-          <h1><a href="/locate-ip-address-on-a-map">Locate IP addresses on a Map</a></h1>
-
-          <div class="entry">
-            <p>The bulk IP address location tool lets you lookup multiple IPs and view their location in a tabular format. Additionally, you can visualize the geographic distribution of the location on a map (currently Google Maps is supported).</p>
-
-
-          </div>
-
-          <a href="/locate-ip-address-on-a-map" class="read-more">Read More</a>
-        </article>
-    
-  
-    
-  
-    
-  
-    
-  
 </div>
-    </div>
-
-    <div class="wrapper-footer">
-      <div class="container">
-        <footer class="footer">
-          
-
-
-
-<a href="https://github.com/ipapi-co/ipapi"><i class="svg-icon github"></i></a>
-
-
-
-
-<a href="https://www.twitter.com/ipapi_co"><i class="svg-icon twitter"></i></a>
-
-
-
-        </footer>
-      </div>
-    </div>
-
-  </body>
+<script src="index.js"></script>
+</body>
 </html>
